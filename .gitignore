@@ -1,0 +1,12 @@
+# 本地敏感配置
+config.local
+config.local.example
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# OS
+.DS_Store
+Thumbs.db
