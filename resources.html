@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学习资源汇总 - 阿静的学习博客</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        .back { 
+            color: white; 
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+        .back:hover { text-decoration: underline; }
+        h1 { 
+            color: white; 
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        .card h2 { color: #333; margin-bottom: 15px; margin-top: 25px; }
+        .card h2:first-child { margin-top: 0; }
+        .card p { color: #666; line-height: 1.8; margin-bottom: 12px; }
+        .card ul { margin-left: 20px; color: #666; line-height: 1.8; }
+        .card li { margin-bottom: 8px; }
+        .card a { color: #667eea; text-decoration: none; }
+        .card a:hover { text-decoration: underline; }
+        .resource-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .resource-card h3 { color: #333; margin-bottom: 10px; }
+        .resource-card .level {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+        .level-easy { background: #4caf50; color: white; }
+        .level-medium { background: #ff9800; color: white; }
+        .level-hard { background: #f44336; color: white; }
+        .tag {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin: 3px;
+        }
+        .date { color: #999; font-size: 0.9em; margin-bottom: 10px; }
+        footer { 
+            text-align: center; 
+            color: rgba(255,255,255,0.7); 
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back">← 返回首页</a>
+        <h1>📖 学习资源汇总</h1>
+        
+        <div class="card">
+            <h2>前言</h2>
+            <p>在学习渗透测试的过程中，我整理了一些优质的学习资源，分享给大家。</p>
+        </div>
+
+        <div class="card">
+            <h2>🎯 靶场练习</h2>
+            
+            <div class="resource-card">
+                <h3>DVWA <span class="level level-easy">入门</span></h3>
+                <p>Damn Vulnerable Web Application，最经典的 Web 漏洞练习靶场。包含 SQL注入、XSS、CSRF、文件上传、命令执行等常见漏洞。</p>
+                <a href="https://dvwa.co.uk/" target="_blank">访问 DVWA</a>
+            </div>
+
+            <div class="resource-card">
+                <h3>Pikachu <span class="level level-easy">入门</span></h3>
+                <p>中文 Web 漏洞靶场，对新手非常友好配有详细的中文说明。</p>
+                <a href="https://github.com/zhuifengshaonianhanlu/pikachu" target="_blank">访问 Pikachu</a>
+            </div>
+
+            <div class="resource-card">
+                <h3>HackTheBox <span class="level level-medium">进阶</span></h3>
+                <p>国外知名的渗透测试练习平台，有大量真实环境的渗透挑战。</p>
+                <a href="https://www.hackthebox.eu/" target="_blank">访问 HackTheBox</a>
+            </div>
+
+            <div class="resource-card">
+                <h3>VulnHub <span class="level level-medium">进阶</span></h3>
+                <p>提供大量虚拟机镜像，可以本地搭建进行渗透练习。</p>
+                <a href="https://www.vulnhub.com/" target="_blank">访问 VulnHub</a>
+            </div>
+
+            <div class="resource-card">
+                <h3>PortSwigger Web Security Academy <span class="level level-easy">入门</span></h3>
+                <p>Burp Suite 官方提供的 Web 安全学习平台，免费且质量极高。</p>
+                <a href="https://portswigger.net/web-security" target="_blank">访问 Academy</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📚 学习文档</h2>
+            
+            <div class="resource-card">
+                <h3>OWASP Top 10</h3>
+                <p>Web 应用安全风险标准文档，渗透测试必读。</p>
+                <a href="https://owasp.org/www-project-top-ten/" target="_blank">访问 OWASP</a>
+            </div>
+
+            <div class="resource-card">
+                <h3>MITRE ATT&CK</h3>
+                <p>攻击战术知识库，了解攻击者的技术手段。</p>
+                <a href="https://attack.mitre.org/" target="_blank">访问 ATT&CK</a>
+            </div>
+
+            <div class="resource-card">
+                <h3>GTFOBins</h3>
+                <p>Linux 提权资源汇总，收集了各种可以用于提权的命令。</p>
+                <a href="https://gtfobins.github.io/" target="_blank">访问 GTFOBins</a>
+            </div>
+
+            <div class="resource-card">
+                <h3>Payloads All The Things</h3>
+                <p>渗透测试payload和绕过技巧汇总。</p>
+                <a href="https://github.com/swisskyrepo/PayloadsAllTheThings" target="_blank">访问 GitHub</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🛠 工具文档</h2>
+            
+            <div class="resource-card">
+                <h3>Nmap Official Documentation</h3>
+                <p>Nmap 官方文档，最权威的使用指南。</p>
+                <a href="https://nmap.org/book/man.html" target="_blank">访问文档</a>
+            </div>
+
+            <div class="resource-card">
+                <h3>Nuclei Templates</h3>
+                <p>Nuclei 漏洞检测模板仓库。</p>
+                <a href="https://github.com/projectdiscovery/nuclei-templates" target="_blank">访问 GitHub</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📺 学习社区</h2>
+            <ul>
+                <li><strong>FreeBuf</strong> - 国内知名安全资讯平台</li>
+                <li><strong>安全客</strong> - 安全资讯和文章</li>
+                <li><strong>Seebug</strong> - 漏洞平台</li>
+                <li><strong>T00ls</strong> - 安全技术论坛</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>💡 学习路径建议</h2>
+            <ul>
+                <li><strong>第一阶段</strong>: DVWA + Pikachu 入门，理解常见漏洞原理</li>
+                <li><strong>第二阶段</strong>: 学习工具使用 (Nmap, SQLMap, Burp Suite)</li>
+                <li><strong>第三阶段</strong>: HackTheBox/VulnHub 进阶练习</li>
+                <li><strong>第四阶段</strong>: 参与真实项目，积累实战经验</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>🛠 资源清单</h2>
+            <div>
+                <span class="tag">DVWA</span>
+                <span class="tag">HackTheBox</span>
+                <span class="tag">VulnHub</span>
+                <span class="tag">OWASP</span>
+                <span class="tag">MITRE ATT&CK</span>
+                <span class="tag">GTFOBins</span>
+                <span class="tag">FreeBuf</span>
+            </div>
+        </div>
+
+        <footer>
+            <p>📝 阿静的学习博客 | <a href="index.html" style="color:white;">返回首页</a></p>
+        </footer>
+    </div>
+</body>
+</html>
