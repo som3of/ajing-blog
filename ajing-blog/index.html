@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>阿静的学习博客</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { 
+            color: white; 
+            text-align: center; 
+            margin-bottom: 40px;
+            font-size: 2.5em;
+        }
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        .card h2 { color: #333; margin-bottom: 15px; }
+        .card p { color: #666; line-height: 1.8; }
+        .tag {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin: 3px;
+        }
+        .date { color: #999; font-size: 0.9em; margin-bottom: 10px; }
+        footer { 
+            text-align: center; 
+            color: rgba(255,255,255,0.7); 
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧠 阿静的学习博客</h1>
+        
+        <div class="card">
+            <h2>关于我</h2>
+            <p>正在学习渗透测试的安全爱好者，28天学习计划已完成。继续在HackTheBox和VulnHub上进阶练习。</p>
+        </div>
+
+        <div class="card">
+            <h2>📚 学习记录</h2>
+            <div class="date">2026-03-13</div>
+            <p>28天渗透测试学习计划圆满完成 ✅</p>
+            <div>
+                <span class="tag">DVWA</span>
+                <span class="tag">SQL注入</span>
+                <span class="tag">渗透测试</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🛠 技能栈</h2>
+            <div>
+                <span class="tag">Nmap</span>
+                <span class="tag">Nuclei</span>
+                <span class="tag">SQL注入</span>
+                <span class="tag">XSS</span>
+                <span class="tag">信息收集</span>
+                <span class="tag">子域名枚举</span>
+            </div>
+        </div>
+
+        <footer>
+            <p>Built with ❤️ | GitHub Pages</p>
+        </footer>
+    </div>
+</body>
+</html>
