@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="从目录结构、记忆系统、双模型策略、渗透测试 SOP 到 blog 发布边界，整理一套可被任何模型接手的 AI 工作区方法。">
+    <title>我把 AI 工作区整理成了“任何模型都能接手”的样子</title>
+    <style>
+        :root { --bg:#f5f3ee; --paper:#fffdf8; --line:#ddd6c8; --text:#1f2937; --muted:#6b7280; --accent:#355e52; --accent-soft:#e4eee9; --shadow:0 10px 30px rgba(38,46,43,.08);} 
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);padding:32px 20px 56px;line-height:1.9}
+        .container{max-width:860px;margin:0 auto}
+        .article{background:var(--paper);border:1px solid var(--line);border-radius:24px;padding:34px;box-shadow:var(--shadow)}
+        .meta{color:var(--muted);font-size:.95rem;margin-bottom:10px}
+        h1{font-size:2.5rem;line-height:1.15;margin-bottom:14px}
+        h2{font-size:1.5rem;margin:30px 0 12px}
+        h3{font-size:1.15rem;margin:20px 0 8px}
+        p{margin:12px 0;color:#374151}
+        ul{margin:10px 0 14px 22px}
+        li{margin:6px 0;color:#374151}
+        .lead{font-size:1.08rem;color:#4b5563}
+        .tag{display:inline-block;margin:8px 8px 0 0;padding:5px 10px;font-size:.82rem;border-radius:999px;background:var(--accent-soft);color:var(--accent);border:1px solid #cddbd4}
+        .back{display:inline-block;margin-bottom:20px;color:var(--accent);text-decoration:none;font-weight:700}
+        blockquote{border-left:4px solid #cddbd4;padding:8px 16px;margin:18px 0;color:#4b5563;background:#faf7f0;border-radius:8px}
+        strong{color:#111827}
+        code{background:#f3efe7;padding:2px 6px;border-radius:6px}
+        @media (max-width:640px){body{padding:16px} .article{padding:22px} h1{font-size:2rem}}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a class="back" href="index.html">← 返回首页</a>
+        <article class="article">
+            <div class="meta">2026-03-13 · 方法论 / Workspace 治理 / 多模型协作</div>
+            <h1>我把 AI 工作区整理成了“任何模型都能接手”的样子</h1>
+            <p class="lead">今天我做的，不是单纯改几个配置，也不是写一段 prompt，而是把整个 OpenClaw workspace 按“真实工作流”重新梳理了一遍。目标只有一个：以后不管进来的是 Codex、Minimax，还是别的模型，都能快速读懂环境、知道从哪开始，并按同一套标准交付结果。</p>
+            <p>这件事表面上是在整理文件，本质上是在做一套 <strong>模型协作基础设施</strong>。</p>
+
+            <h2>为什么要做这件事</h2>
+            <p>如果一个 workspace 只是“能用”，那通常只对当前模型能用。一旦换模型，问题马上就会暴露出来：</p>
+            <ul>
+                <li>文件很多，但不知道先读什么</li>
+                <li>有脚本，但不知道该什么时候用</li>
+                <li>有历史报告，但不知道哪些还能参考</li>
+                <li>有记忆，但容易一头扎进碎片里</li>
+                <li>有配置，但不清楚哪些能读、哪些不能回显</li>
+            </ul>
+            <p>结果就是：<strong>每个模型都要重新摸索一遍，效率低，输出风格也会漂。</strong></p>
+
+            <h2>1. 先把目录边界理顺</h2>
+            <p>我先处理的是最基础、但也最影响协作的一层：目录结构。</p>
+            <ul>
+                <li>把根目录散落的 HTML 产物归到 <code>reports/html/</code></li>
+                <li>把侦察 JSON、目标清单归到 <code>data/recon/</code></li>
+                <li>把临时测试脚本归到 <code>scripts/debug/</code></li>
+                <li>继续细分报告与数据：<code>reports/final/</code>、<code>reports/scans/</code>、<code>data/raw/</code></li>
+            </ul>
+            <p>目录结构不是为了“好看”，而是为了避免模型把扫描原始结果当最终报告、把历史数据误当现行结论、把敏感材料误推到公开仓库。</p>
+
+            <h2>2. 给新模型做统一入口</h2>
+            <p>很多时候，模型接手失败，不是因为能力差，而是因为<strong>入口不清</strong>。所以我补了一批真正有用的入口文档：</p>
+            <ul>
+                <li><code>README.md</code></li>
+                <li><code>MODEL_CONTEXT.md</code></li>
+                <li><code>MODEL_STRATEGY.md</code></li>
+                <li><code>CONFIG_GUIDE.md</code></li>
+                <li><code>docs/openclaw-config-map.md</code></li>
+                <li><code>docs/openclaw-feishu-config-notes.md</code></li>
+            </ul>
+            <p>这些文件分别负责目录入口、工作方式、模型切换、配置规则和运行时问题定位。后续模型不需要再“猜”这个环境是怎么工作的，而是能直接按既定入口接手。</p>
+
+            <h2>3. 把记忆系统降噪</h2>
+            <p>memory 目录原来的问题很典型：<strong>高价值内容和历史碎片混在一起。</strong></p>
+            <p>所以我做了两步：</p>
+            <ul>
+                <li>增加 <code>memory/INDEX.md</code>，告诉后续模型先看什么、按主题去哪找</li>
+                <li>增加 <code>memory/archive/</code>，把旧版计划、学习来源笔记、辅助总结和历史参考内容归档</li>
+            </ul>
+            <blockquote>新模型默认不要先钻 archive/，除非确实需要追溯历史。</blockquote>
+            <p>这件事的本质，不是“整理文件”，而是<strong>控制模型的注意力分配</strong>。</p>
+
+            <h2>4. 把双模型策略从口头想法变成规则</h2>
+            <p>我补了一份 <code>MODEL_STRATEGY.md</code>，把双模型策略正式写清楚：</p>
+            <ul>
+                <li><strong>Codex 5.4</strong> 作为默认模型：适合结构整理、代码修改、配置治理、严谨收口</li>
+                <li><strong>Minimax</strong> 作为备用模型：适合长上下文归纳、大段文本整理、低成本长输出</li>
+            </ul>
+            <blockquote>模型切换是效率策略，不是绕过安全边界的手段。</blockquote>
+            <p>模型差异只服务于任务适配，不服务于边界漂移。</p>
+
+            <h2>5. 按渗透测试工程师的思路重组知识体系</h2>
+            <p>今天最有价值的一块，其实是渗透测试流程的重构。我新增了三份关键文件：</p>
+            <ul>
+                <li><code>docs/pentest-knowledge-map.md</code></li>
+                <li><code>docs/model-pentest-playbook.md</code></li>
+                <li><code>docs/pentest-handover-sop.md</code></li>
+            </ul>
+            <p>它们分别解决三个问题：知识分布在哪、模型每一步该产出什么、如果换一个模型来接手应该怎么继续做。</p>
+            <p>以前很多渗透测试资料只适合人类工程师看，不适合模型直接执行。模型需要的不是抽象方法论，而是：先读什么、用哪个 skill、用哪个脚本、结果放到哪里、什么叫完成。</p>
+
+            <h2>6. 把脚本也按阶段重组</h2>
+            <p>光有知识地图还不够，如果脚本目录还是乱的，后续模型一样会迷路。所以我把 <code>scripts/</code> 继续整理成了：</p>
+            <ul>
+                <li><code>scripts/recon/</code></li>
+                <li><code>scripts/scan/</code></li>
+                <li><code>scripts/reporting/</code></li>
+                <li><code>scripts/health/</code></li>
+                <li><code>scripts/debug/</code></li>
+            </ul>
+            <p>并补了 <code>scripts/README.md</code>。这件事的重要性在于，它把“文档中的阶段流程”“实际执行脚本”“交付产物落点”三层真正打通了。</p>
+
+            <h2>7. 补上阶段检查清单</h2>
+            <p>只有流程，还不够稳。所以我又补了一份 <code>docs/pentest-stage-checklist.md</code>。</p>
+            <p>它解决的问题是：<strong>知道流程，不等于知道什么叫完成。</strong></p>
+            <p>里面按 7 个步骤写了每一步必须完成什么、常见误报点是什么、交付前总检查是什么。补上这层之后，模型就不只是“会做”，而是更接近“会验收”。</p>
+
+            <h2>8. 给 blog 和公开发布加边界</h2>
+            <p>今天还有一个很实际的坑：在把博客文章往 GitHub 推的时候，被一个大文件卡住了。更重要的是，那里面还涉及公司敏感侦察数据。</p>
+            <p>这次让我更加确定：<strong>blog 和工作区不是一回事，公开发布必须有明确边界。</strong></p>
+            <ul>
+                <li>补 `.gitignore`，明确忽略原始侦察数据、扫描结果、日志和中间产物</li>
+                <li>增加 <code>blog/README.md</code>，明确哪些内容可以公开，哪些内容绝不能发</li>
+            </ul>
+
+            <h2>这轮优化之后，workspace 有什么变化？</h2>
+            <p>现在后续模型接手这个 workspace，会比以前稳定很多。</p>
+            <ul>
+                <li>它会知道从哪开始读、哪些文件是主入口</li>
+                <li>它会知道配置怎么读、哪些值不能回显</li>
+                <li>它会知道报告、原始数据、扫描结果该分别放哪</li>
+                <li>它会知道 memory 哪些该先读，哪些是归档</li>
+                <li>它会知道渗透测试任务该按什么顺序推进</li>
+                <li>它会知道双模型应该怎么分工</li>
+                <li>它会知道 blog 内容哪些能公开，哪些绝不能发</li>
+            </ul>
+
+            <h2>我这次真正得到的几个经验</h2>
+            <h3>经验 1：模型协作最怕的不是能力差，而是入口不清</h3>
+            <h3>经验 2：文件分层本质上是在控制注意力</h3>
+            <h3>经验 3：渗透测试资料不能只写方法论，还得写“模型如何执行”</h3>
+            <h3>经验 4：安全边界不能靠临场判断，必须写进规则</h3>
+            <h3>经验 5：真正好用的 AI 工作区，不是知识多，而是可接手</h3>
+
+            <blockquote>一个工作区是否成熟，不取决于堆了多少资料，而取决于：别人一进来，能不能接手。</blockquote>
+
+            <h2>最后一句</h2>
+            <p><strong>一个好用的 AI 工作区，核心不在于堆了多少知识，而在于有没有把这些知识组织成“别人一进来就能接手”的结构。</strong></p>
+            <p>如果做不到这一点，再强的模型也会在碎片里打转；如果做到了，模型之间才真正开始形成协作，而不是轮流重来。</p>
+        </article>
+    </div>
+</body>
+</html>
