@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="批量侦察提效方法论：分层扫描、并发处理、指纹分流、增量输出。">
+    <title>批量侦察怎么做快 - 阿静的学习博客</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container { max-width: 860px; margin: 0 auto; }
+        .back { color: white; text-decoration: none; display: inline-block; margin-bottom: 18px; }
+        .back:hover { text-decoration: underline; }
+        h1 { color: white; margin-bottom: 12px; font-size: 2.2em; }
+        .meta { color: rgba(255,255,255,0.82); margin-bottom: 22px; }
+        .card {
+            background: white;
+            border-radius: 18px;
+            padding: 30px;
+            margin-bottom: 18px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        }
+        h2 { color: #222; margin-bottom: 12px; margin-top: 26px; }
+        h2:first-child { margin-top: 0; }
+        p, li { color: #555; line-height: 1.85; }
+        ul, ol { margin-left: 22px; }
+        li { margin-bottom: 8px; }
+        code {
+            background: #f1f3f5;
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-family: Consolas, monospace;
+            font-size: 0.92em;
+        }
+        pre {
+            background: #212529;
+            color: #f8f9fa;
+            padding: 16px;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 14px 0;
+            font-size: 0.9em;
+        }
+        .tip {
+            background: #eef6ff;
+            border-left: 4px solid #4c6ef5;
+            padding: 14px 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+        }
+        footer { text-align: center; color: rgba(255,255,255,0.75); margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a class="back" href="index.html">← 返回首页</a>
+        <h1>⚡ 批量侦察怎么做快：从串行扫描到分层并发</h1>
+        <div class="meta">2026-03-13 · 方法论 / 工程化</div>
+
+        <div class="card">
+            <h2>为什么批量任务总是慢？</h2>
+            <p>很多人做侦察时，习惯拿到一个域名后直接从头扫到尾：子域名、目录、POC、敏感文件，一个目标做完再做下一个。这种方式在目标很少时问题不大，但一旦变成几十、几百甚至上千个资产，吞吐量会迅速崩掉。</p>
+            <p>根因通常有三个：</p>
+            <ul>
+                <li><strong>串行思维</strong>：把可以并发的事情串起来做。</li>
+                <li><strong>没有筛选</strong>：不区分高价值和低价值目标，导致无差别重扫。</li>
+                <li><strong>输出太晚</strong>：非要等全跑完才汇总，结果过程不可见，失败也难定位。</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>一个更实用的思路：分层扫描</h2>
+            <p>我现在更认可的方式是把侦察拆成几个层次，每一层只解决一个问题：</p>
+            <ol>
+                <li><strong>Layer 0 资产收集</strong>：先把目标面尽量收全。</li>
+                <li><strong>Layer 1 快速筛选</strong>：迅速找出活着的、值得继续打的目标。</li>
+                <li><strong>Layer 2 定向扫描</strong>：根据类型做目录、POC、敏感路径检测。</li>
+                <li><strong>Layer 3 结果聚合</strong>：把发现集中起来做去重和分类。</li>
+                <li><strong>Layer 4 报告输出</strong>：把可交付内容尽快产出。</li>
+            </ol>
+            <div class="tip"><strong>重点：</strong>先做“筛选”，再做“重活”。这样扫描速度和结果质量都会更稳定。</div>
+        </div>
+
+        <div class="card">
+            <h2>怎么把速度提起来？</h2>
+            <h3>1. 让轻任务先跑</h3>
+            <p>子域名枚举、端口探测、HTTP 存活检测，这些都应该优先并发完成。因为它们的目的不是挖深，而是把无效目标尽快淘汰掉。</p>
+            <pre># 例子：先把“活着的 Web 资产”筛出来
+subfinder -d target.com -silent | httpx -threads 100 -silent -o alive.txt</pre>
+
+            <h3>2. 指纹之后再分流</h3>
+            <p>不是所有目标都该走同一套扫描策略。比如识别到 Confluence、Jenkins、WordPress、Tomcat 后，就应该切换到更贴合的字典和模板，而不是继续一锅烩。</p>
+
+            <h3>3. 控制重扫描范围</h3>
+            <p>目录爆破和 POC 扫描最吃时间，应该只打在 Layer 1 里已经证明“活着且有价值”的目标上，而不是对全量资产直接开火。</p>
+
+            <h3>4. 边跑边输出</h3>
+            <p>批量任务不应该等全结束再看结果。最好的状态是：一边扫描，一边沉淀中间产物，例如 <code>alive.txt</code>、<code>fingerprints.txt</code>、<code>sensitive.txt</code>。</p>
+        </div>
+
+        <div class="card">
+            <h2>高并发不等于盲目开大线程</h2>
+            <p>很多时候任务慢，不是线程数不够，而是资源调度混乱。真正有效的做法是按任务性质分别配置：</p>
+            <ul>
+                <li>HTTP 存活检测：高并发、短超时</li>
+                <li>目录扫描：中等并发、按指纹选字典</li>
+                <li>POC 扫描：按风险优先级跑 critical/high</li>
+                <li>聚合报告：串行即可，但要快</li>
+            </ul>
+            <pre>CONFIG = {
+  'http_threads': 100,
+  'dir_threads': 50,
+  'poc_threads': 30,
+  'http_timeout': 3,
+  'batch_size': 1000
+}</pre>
+        </div>
+
+        <div class="card">
+            <h2>我现在更在意的，不只是“快”</h2>
+            <p>批量侦察真正难的不是跑工具，而是把流程工程化。一个能长期复用的流程，至少要满足：</p>
+            <ul>
+                <li><strong>可重复</strong>：同样输入，结果路径稳定。</li>
+                <li><strong>可观察</strong>：随时知道跑到哪一层、卡在哪一步。</li>
+                <li><strong>可中断</strong>：哪怕中途停掉，也保留中间结果。</li>
+                <li><strong>可交付</strong>：最后不是一堆原始输出，而是整理过的结论。</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>结语</h2>
+            <p>批量任务做不快，通常不是工具不够强，而是流程没有分层。把筛选、分流、重扫描、聚合拆开以后，效率会明显提升，结果也更容易复盘。</p>
+            <p>我现在的目标不是“扫得像在表演”，而是把侦察做成一个稳定、可复用、可交付的系统。</p>
+        </div>
+
+        <footer>
+            <p>📝 阿静的学习博客 | <a href="index.html" style="color:white;">返回首页</a></p>
+        </footer>
+    </div>
+</body>
+</html>
